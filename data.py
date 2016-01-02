@@ -7,6 +7,8 @@ from mongoengine import IntField
 from mongoengine import BooleanField
 from mongoengine import StringField
 
+# mongoengine is our database manager, using MonogDB a NOSQL database
+
 try:
     mongo_uri = os.environ.get("MONGOLAB_URI")
     if not mongo_uri:
@@ -35,6 +37,7 @@ except Exception, e:
     print "Connected with local database"
 
 
+# Book and Author are the data classes stored in our database
 class Book(Document):
     title = StringField()
     link = StringField()

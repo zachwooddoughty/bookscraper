@@ -8,10 +8,13 @@
     <body>
         <div class="container">
             <h3>Books:</h3>
+            <!-- If we're filtered by author, show which author is being showed -->
             {% if author %}
                 <h4>Only showing books by {{author}}</h4>
             {% endif %}
+            <!-- List all the books! -->
             {% for book in books %}
+                <!-- If we are filtered by author, hide the books that don't match that filter -->
                 {% if not author or book.author.lower() == author.lower() %}
                     <div class="row row-background-{{ loop.index0 % 2 }}">
                         <div class="col-md-2">{{ book.author }}</div>
@@ -24,6 +27,7 @@
                 {% endif %}
             {% endfor %}
             <hr />
+            <!-- Allow a new author to be added -->
             <h3>Add author</h3>
             <form action="" method="post">
                 <div class="row spacer">
