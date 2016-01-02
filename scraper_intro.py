@@ -2,6 +2,8 @@ import re
 import mechanize
 from bs4 import BeautifulSoup, Tag, NavigableString
 
+from data import Author, Book
+
 
 def scrape(url):
     '''
@@ -91,17 +93,23 @@ def scrape_author(author, earliest_year=0):
 
     # Filter out books before our "earliest year" field and sort them by descending date
     books = [book for book in books if book[0] >= earliest_year]
-    print "==> We found", len(books), "books by", author, "since", year
+    print "==> We found", len(books), "books by", author, "since", earliest_year
     books = sorted(books, key=lambda x: x[0], reverse=True)
     return books
 
 
 def main():
-    author = "Ann Cleeves"
-    year = 2014
-    books = scrape_author(author, year)
-    for book in books:
-        print book[0], book[1].encode('ascii', 'ignore')
+    for author in Author.objects:
+        books = scrape_author(author.name, author.year)
+        for book in books:
+            year = book[0]
+            title = book[1].encode('ascii', 'ignore')
+            Book(
+                author=author.name,
+                title=title,
+                year=year,
+                read=False
+            ).save()
 
 
 if __name__ == "__main__":
