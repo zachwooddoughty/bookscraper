@@ -33,6 +33,8 @@ def goodreads_scrape(url):
         Output: list of books and number of pages of results
     '''
     html = scrape(url)
+    if not html:
+        return [], 1
     soup = BeautifulSoup(html)
 
     # Look for the "previous page" link to find the number of result pages
@@ -53,6 +55,11 @@ def goodreads_scrape(url):
         # Find the book's title from the "bookTitle" link
         title_box = tr.find("a", attrs={"class": "bookTitle"})
         title =  title_box.find('span').text
+        if title_box.has_attr('href'):
+            link = "http://goodreads.com" + title_box['href']
+        else:
+            link = "/"
+
 
         # Look for the date in the "published by" text but fallback with 0
         #   This is b/c it's usually old/weird results that don't have this date field.
@@ -63,7 +70,7 @@ def goodreads_scrape(url):
         except:
             date = 0
 
-        books.append((date, title))
+        books.append((date, title, link))
 
     return books, num_pages
 
@@ -104,12 +111,15 @@ def main():
         for book in books:
             year = book[0]
             title = book[1].encode('ascii', 'ignore')
-            Book(
-                author=author.name,
-                title=title,
-                year=year,
-                read=False
-            ).save()
+            link = book[2]
+            if not Book.objects(author=author.name, title=title, year=year).count():
+                Book(
+                    author=author.name,
+                    title=title,
+                    link=link,
+                    year=year,
+                    read=False
+                ).save()
 
 
 if __name__ == "__main__":

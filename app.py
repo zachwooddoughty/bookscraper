@@ -10,6 +10,9 @@ app.debug = True
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
+        author = request.args.get("author", None)
+        if author:
+            return render_template('index.html', author=author, books=Book.objects(read=False).order_by("-year"))
         return render_template('index.html', books=Book.objects(read=False).order_by("-year"))
     elif request.method == 'POST':
         author = request.form['author']

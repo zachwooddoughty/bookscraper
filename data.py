@@ -37,6 +37,7 @@ except Exception, e:
 
 class Book(Document):
     title = StringField()
+    link = StringField()
     year = IntField()
     read = BooleanField()
     author = StringField()

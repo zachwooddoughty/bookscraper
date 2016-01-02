@@ -8,15 +8,20 @@
     <body>
         <div class="container">
             <h3>Books:</h3>
+            {% if author %}
+                <h4>Only showing books by {{author}}</h4>
+            {% endif %}
             {% for book in books %}
-                <div class="row row-background-{{ loop.index0 % 2 }}">
-                    <div class="col-md-2">{{ book.author }}</div>
-                    <div class="col-md-1">{{ book.year }}</div>
-                    <div class="col-md-5">{{ book.title }}</div>
-                    <div class="col-md-2">
-                        <a href="/read?id={{ book.id }}" class="btn btn-primary">Read it!</a>
+                {% if not author or book.author.lower() == author.lower() %}
+                    <div class="row row-background-{{ loop.index0 % 2 }}">
+                        <div class="col-md-2">{{ book.author }}</div>
+                        <div class="col-md-1">{{ book.year }}</div>
+                        <div class="col-md-5"><a href="{{book.link}}">{{ book.title }}</a></div>
+                        <div class="col-md-2">
+                            <a href="/read?id={{ book.id }}" class="btn btn-primary">Read it!</a>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
             <hr />
             <h3>Add author</h3>
