@@ -2,3 +2,4 @@ flask
 mongoengine
 pymongo
 mechanize
+BeautifulSoup4
